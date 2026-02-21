@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVON | Admin Nexus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-cyan: #00f3ff; --neon-purple: #bc13fe; }
+        body { 
+            background: #020204; 
+            color: #e0e0e0; 
+            font-family: 'Rajdhani', sans-serif; 
+        }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 100;
+        }
+
+        .neon-card {
+            background: rgba(20, 20, 25, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+    <div class="grid-overlay"></div>
+
+    <div class="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row justify-between items-center border-l-4 border-purple-500 pl-6 py-2">
+        <div>
+            <h1 class="font-cyber text-3xl font-bold tracking-[0.2em] text-white glow-text">ADMIN <span class="text-purple-400">NEXUS</span></h1>
+            <p class="text-xs uppercase tracking-[0.5em] text-purple-500/60">System Overview</p>
+        </div>
+        <div class="mt-4 md:mt-0 text-right">
+            <a href="{% url 'index' %}" class="px-4 py-2 bg-cyan-500/10 border border-cyan-500/50 rounded text-cyan-400 hover:bg-cyan-500 hover:text-white transition">Return to Site</a>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto">
+        <div class="neon-card rounded-lg p-6">
+            <h3 class="font-cyber text-xl mb-4 text-purple-400">User Registry</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-white/10 text-xs uppercase">
+                            <th class="p-3">Student ID</th>
+                            <th class="p-3">Name</th>
+                            <th class="p-3">Department</th>
+                            <th class="p-3">Total Paid</th>
+                            <th class="p-3">Remaining Time</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        {% for user_info in users_data %}
+                        <tr>
+                            <td class="p-3 font-cyber">{{ user_info.user.student_id }}</td>
+                            <td class="p-3">{{ user_info.user.name }}</td>
+                            <td class="p-3">{{ user_info.user.department }}</td>
+                            <td class="p-3 font-mono">₹{{ user_info.total_paid|floatformat:2 }}</td>
+                            <td class="p-3 text-cyan-400">{{ user_info.remaining_time }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="p-3 text-center text-gray-500">No user data available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

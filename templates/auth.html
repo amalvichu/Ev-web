@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVON | Security Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f3ff; --accent: #bc13fe; }
+        body { 
+            background: #020204; color: #e0e0e0; font-family: 'Rajdhani', sans-serif;
+            display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden;
+        }
+
+        /* Optimized Background Performance */
+        .bg-fx {
+            position: fixed; inset: 0; pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(188, 19, 254, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* The Terminal Shell */
+        .terminal-shell {
+            background: rgba(10, 10, 12, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 2px solid var(--neon);
+            width: 100%; max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+        }
+
+        /* Input Styling Optimization */
+        input {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.85rem;
+        }
+        input:focus {
+            border-color: var(--neon) !important;
+            background: rgba(0, 243, 255, 0.03) !important;
+            outline: none;
+            transform: translateX(4px);
+        }
+
+        /* Execution Button with Hover Glow */
+        .btn-glow {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #0891b2, #7e22ce);
+            transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            letter-spacing: 2px;
+        }
+        
+        /* Scanning Line */
+        .scanline {
+            width: 100%; height: 1px; background: rgba(0, 243, 255, 0.1);
+            position: absolute; animation: scan 3s linear infinite;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="bg-fx"></div>
+    
+    <div class="terminal-shell p-8 relative">
+        <div class="scanline"></div>
+        
+        <div class="absolute top-4 right-4 text-[8px] font-mono text-gray-600 tracking-tighter">
+            ID: EVN-99-ALPHA<br>STATUS: AUTH_PENDING
+        </div>
+
+        <header class="mb-10">
+            <h2 class="font-cyber text-2xl font-bold tracking-widest text-white">EVON<span class="text-cyan-400">_SEC</span></h2>
+            <div class="flex gap-6 mt-4 border-b border-white/5">
+                <button id="tab-reg" class="pb-2 text-[10px] font-cyber tracking-widest border-b-2 border-cyan-400 text-cyan-400 transition-all">SIGN_UP</button>
+                <button id="tab-log" class="pb-2 text-[10px] font-cyber tracking-widest border-b-2 border-transparent text-gray-500 hover:text-white transition-all">SIGN_IN</button>
+            </div>
+        </header>
+
+        <div class="space-y-6">
+            <form id="form-reg" method="POST" action="{% url 'register' %}" class="space-y-4">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <input type="text" name="student_id" placeholder="STUDENT_REG_ID" class="w-full px-4 py-3 rounded text-white" required>
+                    <input type="text" name="name" placeholder="FULL_NAME" class="w-full px-4 py-3 rounded text-white" required>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" name="department" placeholder="DEPT" class="px-4 py-3 rounded text-white" required>
+                        <input type="email" name="email" placeholder="EMAIL" class="px-4 py-3 rounded text-white" autocomplete="off" spellcheck="false" required>
+                    </div>
+                    <input type="password" name="password" placeholder="SECURITY_KEY" class="w-full px-4 py-3 rounded text-white" required>
+                </div>
+                <button type="submit" class="btn-glow w-full py-4 rounded text-[10px] text-white font-bold uppercase">Initialize Protocol</button>
+            </form>
+
+            <form id="form-log" method="POST" action="{% url 'login' %}" class="hidden space-y-4">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <input type="text" name="student_id" placeholder="STUDENT_REG_ID" class="w-full px-4 py-3 rounded text-white" required>
+                    <input type="password" name="password" placeholder="SECURITY_KEY" class="w-full px-4 py-3 rounded text-white" required>
+                </div>
+                <button type="submit" class="btn-glow w-full py-4 rounded text-[10px] text-white font-bold uppercase">Grant Access</button>
+            </form>
+        </div>
+
+        {% if messages %}
+        <div class="mt-6 p-3 bg-red-500/10 border-l-2 border-red-500 text-red-400 text-[10px] font-mono">
+            {% for message in messages %} > ERR_0x0{{ forloop.counter }}: {{ message }}{% endfor %}
+        </div>
+        {% endif %}
+
+        <footer class="mt-8 text-center">
+            <p class="text-[9px] text-gray-600 font-cyber tracking-[0.3em]">ENCRYPTED_TRANSMISSION_ACTIVE</p>
+        </footer>
+    </div>
+
+    <script>
+        const regTab = document.getElementById('tab-reg');
+        const logTab = document.getElementById('tab-log');
+        const regForm = document.getElementById('form-reg');
+        const logForm = document.getElementById('form-log');
+
+        function switchTab(showForm, hideForm, activeTab, inactiveTab) {
+            showForm.classList.remove('hidden');
+            hideForm.classList.add('hidden');
+            activeTab.classList.add('border-cyan-400', 'text-cyan-400');
+            inactiveTab.classList.remove('border-cyan-400', 'text-cyan-400');
+            inactiveTab.classList.add('text-gray-500', 'border-transparent');
+        }
+
+        regTab.addEventListener('click', () => switchTab(regForm, logForm, regTab, logTab));
+        logTab.addEventListener('click', () => switchTab(logForm, regForm, logTab, regTab));
+
+        if (new URLSearchParams(window.location.search).get('form') === 'login') {
+            logTab.click();
+        }
+    </script>
+</body>
+</html>

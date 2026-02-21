@@ -1,0 +1,30 @@
+[
+    {
+        "student_id": "12345",
+        "authorized": true
+    },
+    {
+        "student_id": "67890",
+        "authorized": true
+    },
+    {
+        "student_id": "11223",
+        "authorized": true
+    },
+    {
+        "student_id": "98765",
+        "authorized": true
+    },
+    {
+        "student_id": "54321",
+        "authorized": true
+    },
+    {
+        "student_id": "22334",
+        "authorized": false
+    },
+    {
+        "student_id": "44556",
+        "authorized": false
+    }
+]
